@@ -4,70 +4,207 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Happy Birthday 🎉</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Roboto&display=swap" rel="stylesheet">
   <style>
-    body {
+    body, html {
       margin: 0;
-      font-family: 'Pacifico', cursive;
-      background: linear-gradient(to right, #fbd3e9, #bb377d);
-      color: white;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      overflow: hidden;
+    }
+
+    .wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      z-index: 1;
+      position: relative;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 700px;
+      width: 90%;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
       text-align: center;
-      overflow-x: hidden;
+      animation: fadeIn 2s ease;
+      z-index: 2;
+      position: relative;
     }
 
-    h1 {
-      font-size: 4rem;
-      margin-top: 50px;
-      animation: bounce 1.5s infinite;
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      color: #bb377d;
+      margin-bottom: 20px;
     }
 
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
+    .title span {
+      color: #333;
+    }
+
+    .photo {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 12px;
+      margin: 20px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .message {
-      font-size: 1.8rem;
-      margin: 30px auto;
-      max-width: 80%;
+      font-size: 1.1rem;
+      color: #555;
+      line-height: 1.6;
     }
 
-    .image-container {
+    .from {
       margin-top: 30px;
+      font-weight: bold;
+      color: #333;
     }
 
-    .image-container img {
-      max-width: 300px;
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.5);
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .footer {
-      margin-top: 50px;
-      font-size: 1.2rem;
-      opacity: 0.8;
+    /* Confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
     }
+
+    /* Balloons */
+    .balloon {
+      width: 40px;
+      height: 60px;
+      background-color: #ff5e78;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      position: absolute;
+      bottom: -100px;
+      animation: float 10s infinite ease-in-out;
+    }
+
+    .balloon::after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      height: 30px;
+      background: #555;
+      top: 60px;
+      left: 50%;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateX(0) translateY(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-50px) translateY(-110vh);
+        opacity: 0;
+      }
+    }
+
   </style>
 </head>
 <body>
-  <h1>🎉 Happy Birthday [Friend's Name] 🎂</h1>
 
-  <div class="message">
-    Wishing you endless happiness, laughter, and love on your special day.
-    May all your dreams come true and your heart be filled with joy 💖
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Balloons -->
+  <div class="balloon" style="left: 10%; animation-delay: 0s;"></div>
+  <div class="balloon" style="left: 30%; animation-delay: 2s; background-color: #ffa500;"></div>
+  <div class="balloon" style="left: 60%; animation-delay: 4s; background-color: #00c1d4;"></div>
+  <div class="balloon" style="left: 80%; animation-delay: 1s; background-color: #9b59b6;"></div>
+
+  <!-- Main Card -->
+  <div class="wrapper">
+    <div class="card">
+      <h1 class="title">Happy Birthday, <span><div Tan-Tan=""></div></span> 🎂</h1>
+      <img src="Screenshot 2025-06-22 000414.png" alt="Friend's Photo" class="photo">
+      <p class="message">
+        Wishing you a day filled with love, joy, and unforgettable moments.<br>
+        May the year ahead be your most successful and happiest yet.<br>
+        Cheers to your journey and the amazing memories to come! 🥂
+      </p>
+      <p class="from">— With best wishes, <strong>[Samar]</strong></p>
+    </div>
   </div>
 
-  <div class="image-container">
-    <img src="your-friend-photo.jpg" alt="Friend's Photo">
-  </div>
-
-  <div class="footer">Made with ❤️ by [Your Name]</div>
-
-  <!-- Optional background music -->
-  <!-- 
+  <!-- Optional Music -->
+  <!--
   <audio autoplay loop>
-    <source src="happy-birthday-song.mp3" type="audio/mpeg">
+    <source src="The Kac-Ties - Happy Birthday.mp3" type="audio/mpeg">
   </audio>
   -->
+
+  <!-- Confetti JS -->
+  <script>
+    const canvas = document.getElementById("confetti-canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const confetti = [];
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    for (let i = 0; i < 150; i++) {
+      confetti.push({
+        x: random(0, canvas.width),
+        y: random(-canvas.height, 0),
+        r: random(2, 6),
+        d: random(2, 8),
+        color: `hsl(${random(0, 360)}, 100%, 70%)`,
+        tilt: random(-10, 10)
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.fillStyle = c.color;
+        ctx.ellipse(c.x, c.y, c.r, c.r * 0.4, c.tilt, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      update();
+      requestAnimationFrame(draw);
+    }
+
+    function update() {
+      confetti.forEach(c => {
+        c.y += c.d;
+        c.x += Math.sin(c.y * 0.01);
+        if (c.y > canvas.height) {
+          c.y = -10;
+          c.x = random(0, canvas.width);
+        }
+      });
+    }
+
+    draw();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
 </body>
 </html>
